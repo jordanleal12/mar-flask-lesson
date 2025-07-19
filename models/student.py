@@ -9,7 +9,7 @@ class Student(db.Model):
     address = db.Column(db.String(100))
 
 
-class StudentSchema:
+class StudentSchema(SQLAlchemyAutoSchema):
     class meta:
         model = Student
         load_instance = True
