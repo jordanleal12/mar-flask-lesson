@@ -10,10 +10,10 @@ class Student(db.Model):
 
 
 class StudentSchema(SQLAlchemyAutoSchema):
-    class meta:
+    class Meta:
         model = Student
         load_instance = True
 
 
 student_schema = StudentSchema()
-student_schema = StudentSchema(many=True)
+students_schema = StudentSchema(many=True)
