@@ -57,3 +57,31 @@ def create_a_student():
                 return {"message": "Email must be unique"}, 400
             case _:
                 return {"message": "Unexpected error occured"}, 400
+
+
+@student_bp.route("/<int:student_id>", methods=["DELETE"])
+def delete_student(student_id):
+    stmt = db.select(Student).where(Student.id == student_id)
+    student = db.session.scalar(stmt)
+    if student:
+        db.session.delete(student)
+        db.session.commit()
+        return {"message": f"Student '{student.name}' has been deleted successfully"}
+    else:
+        return {"message": f"Student '{student_id}' does not exist"}, 404
+
+
+@student_bp.route("/<int:student_id>", methods=["PUT", "PATCH"])
+def update_student(student_id):
+    stmt = db.select(Student).where(Student.id == student_id)
+    student = db.session.scalar(stmt)
+    if student:
+        body_data = request.get_json()
+
+        student.name = body_data.get("name") or student.name
+        student.email = body_data.get("email") or student.email
+        student.address = body_data.get("address") or student.address
+        db.session.commit()
+        return jsonify(student_schema.dump(student))
+    else:
+        return {"message": f"Student with id {student_id} does not exist."}, 404
