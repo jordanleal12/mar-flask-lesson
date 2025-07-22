@@ -1,8 +1,6 @@
 import os
 from flask import Flask
 from init import db
-from controllers.cli_controller import db_commands
-from controllers.student_controller import student_bp
 
 
 def create_app():
@@ -12,7 +10,9 @@ def create_app():
 
     db.init_app(app)
 
-    app.register_blueprint(db_commands)
-    app.register_blueprint(student_bp)
+    from controllers import controller_blueprints
+
+    for controller in controller_blueprints:
+        app.register_blueprint(controller)
 
     return app
